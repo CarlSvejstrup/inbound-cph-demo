@@ -1,0 +1,78 @@
+---
+name: proactivity-scan
+description: Scan a client's live data and recent memory for anomalies, opportunities, and things the team should probably surface before the client does. Produce 3 ranked proactive recommendations with suggested next actions. Use when the user asks for proactivity, what's changing, what to flag, or says "scan <client>".
+---
+
+# proactivity-scan
+
+Turn the agent into a proactive account manager. Read recent data + memory, find what's moving, decide what the team should bring to the client before the client brings it to us.
+
+## When to use
+
+Trigger phrases: "proactivity scan", "what should I flag", "what's changing for <client>", "anything Nordkap should hear from us", "scan <client>", "opportunities this week".
+
+## Inputs
+
+- `04-memory/client-memory.md` — context on what's been tried, what's worked, what's still open
+- `05-data/*.csv` — latest metrics (weekly or monthly series)
+- `01-brand/kpis.md` — what we're actually optimising for
+- `06-decisions/*.md` — open decisions whose outcome we're measuring
+- Connectors if available (Semrush MCP, GA4 via Sheets, Ads) — live where possible
+- `03-meetings/*.md` — last 2 meetings (for tonal calibration)
+
+## What to produce
+
+Three ranked proactive items. Each has this shape:
+
+### Item format
+
+**Headline** — one line, concrete, grounded in data.
+
+**What changed / what we're seeing** — 2-3 sentences of evidence. Cite the metric, the period, the delta. If it's qualitative (competitor movement, etc.), cite the source.
+
+**Why it matters for this client** — 1-2 sentences. Connect to their stated priorities (from kpis.md) or strategic tensions (from brand.md).
+
+**Suggested next action** — one concrete thing we propose doing or asking. Not "monitor" — something actionable this week or next.
+
+**Confidence** — High / Medium / Low. High means data is unambiguous. Low means pattern-matching on limited signal.
+
+## Ranking rules
+
+Rank the three items by a blend of:
+1. Materiality to the client's north-star KPI
+2. Time-sensitivity (something decaying this week beats something that can wait)
+3. Whether the client is likely to spot it themselves soon (higher rank if we get there first)
+
+Do NOT rank by how easy they are to action. The point of proactivity is surfacing hard things early.
+
+## Rules
+
+- Lead with what's *moving*, not what's stable. Stable-and-good is not proactivity.
+- Be honest about low-confidence patterns. Flag them as such. Don't dress up a hunch as a finding.
+- Recommendations must be specific enough to act on. "Improve email" is not a recommendation. "Greenlight the re-permissioning campaign by Friday" is.
+- If memory contains a prior recommendation that's still open, check whether this scan's findings strengthen or weaken that recommendation. Mention it.
+- After producing the three items, append a single entry to `04-memory/client-memory.md` with the date, the three headlines, and the confidence levels. Use the append format shown in existing memory entries. This is the write-back step that makes the context bank compound.
+
+## Example output shape
+
+```
+# Nordkap Friluft — proactivity scan (2026-04-20)
+
+## 1. Hav & Fjeld now ranking top-3 on two pack queries [High]
+
+**What:** Competitor SEO share data (2026-04-14 pull) shows Hav & Fjeld at position 3 on "letvaegts rygsaek" and "rygsaek vandretur" — both queries where Nordkap ranked 4-6 last month.
+
+**Why it matters:** Pack category is Nordkap's second revenue anchor and had a surprise strong March (+22% YoY). We risk losing the halo.
+
+**Next action:** Mette adds 8-query monitoring block on Hav & Fjeld pack terms; propose a defensive content brief to Sara next Monday.
+
+## 2. Email open rate stabilising below target [Medium]
+...
+
+## 3. Category page flip — early signal window opens next week [Low]
+...
+
+---
+Appending to client-memory.md:
+2026-04-20 — proactivity scan: (1) Hav & Fjeld pack pressure [H], (2) email plateau [M], (3) category page early-signal window [L]
+```
