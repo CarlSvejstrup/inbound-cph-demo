@@ -51,7 +51,7 @@ Do NOT rank by how easy they are to action. The point of proactivity is surfacin
 - Be honest about low-confidence patterns. Flag them as such. Don't dress up a hunch as a finding.
 - Recommendations must be specific enough to act on. "Improve email" is not a recommendation. "Greenlight the re-permissioning campaign by Friday" is.
 - If memory contains a prior recommendation that's still open, check whether this scan's findings strengthen or weaken that recommendation. Mention it.
-- After producing the three items, append a single entry to `04-memory/client-memory.md` with the date, the three headlines, and the confidence levels. Use the append format shown in existing memory entries. This is the write-back step that makes the context bank compound.
+- **Drive write-back is human-in-the-loop. Never write to `client-memory.md` without explicit user approval.** After producing the three items, render the proposed one-line memory entry (date + three headlines + confidence levels, matching existing memory format) in a fenced code block, prefixed with: *"Proposed append to `04-memory/client-memory.md` — confirm to write, edit to revise, or say skip."* Wait for explicit approval (`yes` / `approve` / `confirm` / `write it`); silence and thumbs-up are not approval. Edits are approval — apply them then write. Only after approval, perform the Drive write and confirm back to the user. The user-confirmed append is what makes the context bank compound — but a write without confirmation is worse than no write at all.
 
 ## Example output shape
 
