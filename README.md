@@ -1,6 +1,8 @@
-# inbound-skills
+# inbound-cph-demo
 
-Git-backed skill library for Inbound CPH's Claude setup. Source of truth for every skill the team uses, across Claude Projects and Claude Cowork.
+Operating layer for the Inbound CPH Kunde Specialist demo: skills, the human-in-the-loop write contract (`CLAUDE.md`), Cowork sync scripts, and onboarding docs. Source of truth for every skill that runs in the demo and (later) production setup, across Claude Cowork and Claude Projects.
+
+The companion Drive folder for the demo client is `nordkap-friluft/` — see `CLAUDE.md` for the workspace shape skills expect.
 
 ## Philosophy
 
@@ -42,7 +44,7 @@ docs/
 ## Quickstart for a new skill author
 
 ```bash
-cd ~/code/personal/inbound-skills
+cd ~/code/personal/inbound-cph-demo
 git checkout -b add-<skill-name>
 cp -r skills/_template skills/<skill-name>
 # edit skills/<skill-name>/SKILL.md

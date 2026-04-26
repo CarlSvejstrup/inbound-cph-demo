@@ -1,4 +1,4 @@
-# Contributing to inbound-skills
+# Contributing to inbound-cph-demo
 
 ## Quickstart
 

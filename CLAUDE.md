@@ -1,4 +1,4 @@
-# CLAUDE.md — inbound-skills
+# CLAUDE.md — inbound-cph-demo
 
 Operating rules for any Claude agent (Cowork, claude.ai Project, Claude Code, Agent SDK) running skills from this repo against an Inbound CPH client workspace.
 
@@ -67,7 +67,7 @@ Every client workspace follows this structure on Drive:
   06-decisions/    YYYY-MM-DD-<topic>.md
 ```
 
-Demo client for evaluation: **Nordkap Friluft**, in the Drive folder `inbound-cph-demo/` (root ID `1Ca6_V4v57h7NDVQS0NRI-yP47gh_QTa9`). Skills assume this shape; if a client folder is missing one of these, surface it rather than silently improvising.
+Demo client for evaluation: **Nordkap Friluft**, in the Drive folder `nordkap-friluft/` (root ID `1Ca6_V4v57h7NDVQS0NRI-yP47gh_QTa9`). Skills assume this shape; if a client folder is missing one of these, surface it rather than silently improvising.
 
 ---
 

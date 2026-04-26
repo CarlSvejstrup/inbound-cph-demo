@@ -5,12 +5,12 @@
 
 set -euo pipefail
 
-REPO_DIR="${INBOUND_SKILLS_DIR:-$HOME/code/personal/inbound-skills}"
+REPO_DIR="${INBOUND_DEMO_DIR:-$HOME/code/personal/inbound-cph-demo}"
 COWORK_SKILLS_DIR="${COWORK_SKILLS_DIR:-$HOME/Library/Application Support/Claude/skills}"
 
 if [[ ! -d "$REPO_DIR" ]]; then
-  echo "Error: inbound-skills repo not found at $REPO_DIR" >&2
-  echo "Set INBOUND_SKILLS_DIR or clone the repo to that path." >&2
+  echo "Error: inbound-cph-demo repo not found at $REPO_DIR" >&2
+  echo "Set INBOUND_DEMO_DIR or clone the repo to that path." >&2
   exit 1
 fi
 
