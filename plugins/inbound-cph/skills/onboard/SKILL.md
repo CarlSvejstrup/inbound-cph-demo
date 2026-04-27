@@ -39,9 +39,13 @@ List the skills in this plugin with their one-line descriptions:
 
 Tell the user how to invoke them (`/inbound-cph:client-brief`, etc.).
 
-### 4. Optional — write a project-local CLAUDE.md
+### 4. Optional — write a project-local CLAUDE.md (recommended)
 
-Ask: "Are you working from a specific client folder right now? If yes, I can write a short project-local CLAUDE.md that pins this client as the active workspace and reminds future sessions of the operating rules."
+Why this matters: the plugin's `CLAUDE.md` is **not** auto-loaded by Claude Code for free-form chat. It only loads when a skill runs. To make the operating contract always-on in this workspace, you write a tiny local `CLAUDE.md` at the workspace root that references the plugin's canonical contract. Claude Code then auto-loads the local pointer at every session start, which pulls in the full rules.
+
+The local file is a pointer, not a copy. When the plugin updates (new rules, new voice guidance), users run `/plugin update` and the next session reads the new canonical contract through the same pointer. One source of truth, automatically applied.
+
+Ask: "Are you working from a specific client folder right now? If yes, I can write a short project-local CLAUDE.md that activates the plugin contract for this workspace."
 
 If yes, ask for the client name, draft the file content, and follow the standard write-gate (draft, render proposal, wait for explicit approval, write).
 

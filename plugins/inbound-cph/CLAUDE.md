@@ -1,6 +1,11 @@
 # Inbound CPH — Kunde Specialist operating contract
 
-This file is auto-loaded whenever the `inbound-cph` plugin is active. It applies to every Inbound CPH user running Kunde Specialist skills.
+This file is the canonical operating contract for every Inbound CPH user running Kunde Specialist skills. It is loaded in two ways:
+
+1. **By the skills themselves** — every skill in this plugin reads `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` (this file) and the `context/*.md` files when invoked.
+2. **By a project-local `CLAUDE.md` pointer** — if you ran `/inbound-cph:onboard` in your client workspace, it wrote a short local `CLAUDE.md` that references this file. Claude Code auto-loads that local pointer at session start, which pulls this contract in for every interaction in that workspace, not just skill invocations.
+
+If you have not run onboard yet, this contract still applies whenever a skill runs; it just is not loaded for free-form chat. Run `/inbound-cph:onboard` once per client workspace to make it always-on.
 
 ## Hard rule: human-in-the-loop on every write
 
