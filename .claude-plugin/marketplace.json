@@ -4,7 +4,7 @@
   "plugins": [
     {
       "name": "inbound-cph",
-      "source": ".",
+      "source": "./plugins/inbound-cph",
       "description": "Kunde Specialist skills for Inbound CPH client work"
     }
   ]
