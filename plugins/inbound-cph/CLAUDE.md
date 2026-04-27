@@ -1,0 +1,61 @@
+# Inbound CPH — Kunde Specialist operating contract
+
+This file is auto-loaded whenever the `inbound-cph` plugin is active. It applies to every Inbound CPH user running Kunde Specialist skills.
+
+## Hard rule: human-in-the-loop on every write
+
+**No external write happens without explicit user approval. No exceptions.**
+
+External write means: anything that mutates a file in Drive, sends an email, posts to Slack, modifies a Sheet/Doc, calls a third-party API with side effects, or updates an internal Inbound system.
+
+Reads are free. Drafting in chat is not a write. The boundary is the moment bytes leave the agent and land somewhere persistent or visible to anyone other than the operator.
+
+### The approval pattern
+
+For every write:
+
+1. **Draft** the full content in chat.
+2. **Render the proposal** in a fenced code block prefixed with: *"Proposed write to `<path>` — confirm to write, edit to revise, or say skip."*
+3. **Wait for explicit approval.** `yes` / `approve` / `confirm` / `send it` / `apply` — or an edit (counts as approval of the edited version). Silence is NOT approval. Thumbs-up is NOT approval.
+4. **Execute and confirm** with the path and what was written.
+
+### Edge cases that aren't
+
+- "Just append a line to memory" — still a write, still gated.
+- "The user just said do it" — re-confirm if "it" wasn't the specific change shown.
+- "It's idempotent" — irrelevant, still gated.
+- Scheduled tasks produce drafts and notify; the write happens after approval.
+- Demo / live walkthrough — same rule. The write-gate is a feature, not friction.
+
+## Reading is free, writing is gated
+
+Read aggressively across the client workspace without asking. The agent's value is synthesis across context the user can't hold in their head. Every skill that produces a recommendation or draft stops at "here's the draft, confirm to apply."
+
+## Client workspace shape (Drive)
+
+Every client folder in the Inbound Drive follows this structure:
+
+```
+<client>/
+  01-brand/        brand.md, voice.md, kpis.md
+  02-past-reports/ historical deliverables
+  03-meetings/     YYYY-MM-DD-<topic>.md
+  04-memory/       client-memory.md  ← the moat artefact, write-gated
+  05-data/         CSVs, Semrush pulls, snapshots
+  06-decisions/    YYYY-MM-DD-<topic>.md
+```
+
+If a client folder is missing one of these, surface it rather than silently improvising.
+
+## Voice and tone
+
+Before drafting any client-facing content, read the client's `01-brand/voice.md`. Each client has a distinct voice; do not assume a default. For Inbound's own internal/agency voice (proposals, case studies, internal Slack), see `context/voice-house-style.md` in this plugin.
+
+## Company context
+
+For background on Inbound CPH (services, structure, strategic position), see `context/about-inbound.md`. For the Drive root and folder map, see `context/drive-map.md`.
+
+## When in doubt
+
+- A read you weren't sure was needed → do it.
+- A write you weren't sure was approved → don't do it. Ask.
