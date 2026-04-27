@@ -11,7 +11,15 @@ Turn the agent into a proactive account manager. Read recent data + memory, find
 
 Trigger phrases: "proactivity scan", "what should I flag", "what's changing for <client>", "anything Nordkap should hear from us", "scan <client>", "opportunities this week".
 
-## Inputs
+## Trin 0 — Kontekst (skal altid køres først)
+
+Læs `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` før noget andet. Den indeholder write-gate-reglerne, kilde-attribution-formatet, sprog-reglerne, og hvordan Drive bruges.
+
+## Trin 1 — Verificér Drive
+
+Bekræft at du kan se Inbound-rod-mappen i Drive (ID `${user_config.inbound_root_folder_id}`, default `17JwnWKToZSJUSCURjS9PzzBeqe6_gPfi`). Hvis ikke, sig: "Jeg kan ikke nå Inbound's Drive-mappe. Tjek at du er logget ind på Drive i Cowork." og stop.
+
+## Inputs (from Drive)
 
 - `04-memory/client-memory.md` — context on what's been tried, what's worked, what's still open
 - `05-data/*.csv` — latest metrics (weekly or monthly series)
@@ -51,6 +59,7 @@ Do NOT rank by how easy they are to action. The point of proactivity is surfacin
 - Be honest about low-confidence patterns. Flag them as such. Don't dress up a hunch as a finding.
 - Recommendations must be specific enough to act on. "Improve email" is not a recommendation. "Greenlight the re-permissioning campaign by Friday" is.
 - If memory contains a prior recommendation that's still open, check whether this scan's findings strengthen or weaken that recommendation. Mention it.
+- Always end output with `## Kilder` listing every Drive file you read, plus any live-connector pulls (Semrush, GA4, Ads) with the date of the pull. Format per `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` § Source attribution.
 - **Drive write-back is human-in-the-loop. Never write to `client-memory.md` without explicit user approval.** After producing the three items, render the proposed one-line memory entry (date + three headlines + confidence levels, matching existing memory format) in a fenced code block, prefixed with: *"Proposed append to `04-memory/client-memory.md` — confirm to write, edit to revise, or say skip."* Wait for explicit approval (`yes` / `approve` / `confirm` / `write it`); silence and thumbs-up are not approval. Edits are approval — apply them then write. Only after approval, perform the Drive write and confirm back to the user. The user-confirmed append is what makes the context bank compound — but a write without confirmation is worse than no write at all.
 
 ## Example output shape
@@ -71,6 +80,13 @@ Do NOT rank by how easy they are to action. The point of proactivity is surfacin
 
 ## 3. Category page flip — early signal window opens next week [Low]
 ...
+
+## Kilder
+- `nordkap-friluft/04-memory/client-memory.md` — pack category surge note (2026-03-28), email plateau context
+- `nordkap-friluft/01-brand/kpis.md` — north-star (tent CVR), pack as second anchor
+- `nordkap-friluft/05-data/semrush-2026-04-14.csv` — Hav & Fjeld pack-query rankings
+- `nordkap-friluft/05-data/email-engagement-weekly.csv` — open rate trend
+- `nordkap-friluft/06-decisions/2026-04-01-category-page-flip.md` — measurement window opens 2026-04-22
 
 ---
 Appending to client-memory.md:

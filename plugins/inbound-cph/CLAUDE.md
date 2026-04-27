@@ -36,6 +36,36 @@ For every write:
 
 Read aggressively across the client workspace without asking. The agent's value is synthesis across context the user can't hold in their head. Every skill that produces a recommendation or draft stops at "here's the draft, confirm to apply."
 
+## Drive access
+
+This plugin uses Cowork's built-in Google Drive connector (`mcp__claude_ai_Google_Drive__*`). The user has already authorised Drive at the Cowork level.
+
+The Inbound root folder ID is configured via `userConfig.inbound_root_folder_id`. Default: **`17JwnWKToZSJUSCURjS9PzzBeqe6_gPfi`** (the shared `inbound-cph/` folder). Always scope Drive searches by parent folder ID = `${user_config.inbound_root_folder_id}` so you only see Inbound content.
+
+Before doing any client work, verify you can reach the Inbound root. If a Drive call fails, tell the user: "Jeg kan ikke nå Inbound's Drive-mappe. Tjek at du er logget ind på Drive i Cowork." Then stop.
+
+## Source attribution (kilder)
+
+**Every output that synthesises from Drive must end with a `## Kilder` section listing the exact files used.** Trust depends on auditability — the user must be able to verify any claim against the file it came from.
+
+### Format
+
+```
+## Kilder
+- `nordkap-friluft/01-brand/voice.md` — voice rules, banned words
+- `nordkap-friluft/04-memory/client-memory.md` — declining email open rate (note dated 2026-03-14)
+- `nordkap-friluft/03-meetings/2026-04-12-quarterly-review.md` — pricing experiment status
+```
+
+### Rules
+
+- List every Drive file you actually read for the output. Not files you considered, not files in scope — files you actually opened.
+- For each file, add a short note (after the em-dash) explaining what you used it for, specific enough that the user can find the relevant claim in the output.
+- Use Drive paths relative to the Inbound root (`<client>/<folder>/<file>`), not Drive folder IDs.
+- If a file had a specific dated entry that mattered (a memory note, a meeting from a specific day), include the date in the note.
+- If you produced output without reading any Drive files (rare — only `onboard` and pure voice-check on a pasted draft), say `## Kilder\n- Ingen Drive-filer læst (input var leveret direkte i samtalen).` Don't omit the section.
+- Never invent a source. If unsure which file said something, say so (`— sandsynligvis fra et tidligere møde, ikke verificeret`).
+
 ## Client workspace shape (Drive)
 
 Every client folder in the Inbound Drive follows this structure:

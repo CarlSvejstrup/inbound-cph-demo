@@ -11,7 +11,15 @@ The fastest possible status read. Intended to take the reader 2 minutes to absor
 
 Trigger phrases: "weekly pulse", "this week's status", "pulse <client>", "give me the 2-minute", "what's new for <client>".
 
-## Inputs
+## Trin 0 — Kontekst (skal altid køres først)
+
+Læs `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` før noget andet. Den indeholder write-gate-reglerne, kilde-attribution-formatet, sprog-reglerne, og hvordan Drive bruges.
+
+## Trin 1 — Verificér Drive
+
+Bekræft at du kan se Inbound-rod-mappen i Drive (ID `${user_config.inbound_root_folder_id}`, default `17JwnWKToZSJUSCURjS9PzzBeqe6_gPfi`). Hvis ikke, sig: "Jeg kan ikke nå Inbound's Drive-mappe. Tjek at du er logget ind på Drive i Cowork." og stop.
+
+## Inputs (from Drive)
 
 - `05-data/metrics-weekly.csv` (or equivalent) — last 4 weeks
 - `04-memory/client-memory.md` — prior context, last pulse
@@ -36,6 +44,7 @@ The 3-5 metrics that changed meaningfully this week vs last week. Include direct
 - Numbers where numbers exist; qualitative only if there's no alternative.
 - Do NOT restate the whole monthly story. This is a *delta* view.
 - Do NOT recommend actions — that's proactivity-scan's job. Pulse is observation + forecast.
+- Always end output with `## Kilder` listing every Drive file you read. Format per `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` § Source attribution.
 - **Drive write-back is human-in-the-loop. Never write to `client-memory.md` without explicit user approval.** After producing the pulse, render the proposed append block and ask the user to confirm before writing. Use this exact pattern:
 
   1. Show the pulse to the user
@@ -82,4 +91,10 @@ The user-confirmed append is the write-back step. Without it, the pulse evaporat
 
 ## What Sara will likely ask
 Whether category page flip is showing in behaviour metrics yet. Honest answer: 3 weeks in, directionally holding, too early for CVR attribution.
+
+## Kilder
+- `nordkap-friluft/05-data/metrics-weekly.csv` — CVR, organic sessions, ROAS, email open rate (last 4 weeks)
+- `nordkap-friluft/05-data/semrush-2026-04-14.csv` — Hav & Fjeld pack-query check
+- `nordkap-friluft/04-memory/client-memory.md` — Sara's last meeting note (2026-04-08), re-permissioning status
+- `nordkap-friluft/06-decisions/2026-04-01-category-page-flip.md` — measurement window context
 ```

@@ -13,7 +13,15 @@ Trigger phrases: "voice check", "tone check", "is this on voice", "does this sou
 
 The user provides a draft (pasted in chat, or a file path inside the client workspace). The skill reviews it; it does not write the draft.
 
-## Inputs (pulled from the client's workspace)
+## Trin 0 — Kontekst (skal altid køres først)
+
+Læs `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` før noget andet. Den indeholder write-gate-reglerne, kilde-attribution-formatet, sprog-reglerne, og hvordan Drive bruges.
+
+## Trin 1 — Verificér Drive
+
+Bekræft at du kan se Inbound-rod-mappen i Drive (ID `${user_config.inbound_root_folder_id}`, default `17JwnWKToZSJUSCURjS9PzzBeqe6_gPfi`). Hvis ikke, sig: "Jeg kan ikke nå Inbound's Drive-mappe. Tjek at du er logget ind på Drive i Cowork." og stop.
+
+## Inputs (from Drive)
 
 - `01-brand/voice.md` — editorial voice rules (do/don't, banned words, register, sentence shapes)
 - `01-brand/brand.md` — positioning context, so voice judgments are grounded in strategy not just style
@@ -46,6 +54,7 @@ One sentence from `voice.md` that captures the underlying principle the draft mi
 - Be honest about `On voice` verdicts. If a draft is fine, say it is fine. Padding the findings to look thorough is itself off-voice for an agency.
 - Lead with the verdict. No preamble.
 - This skill is read-only by default. If a recurring deviation pattern emerges (e.g. the same hype word appears in three drafts), propose a one-line append to `04-memory/client-memory.md` under "Voice deviation patterns", but follow the standard write-gate: draft, render the proposal, wait for explicit approval, then write.
+- Always end output with `## Kilder` listing every Drive file you read. Format per `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` § Source attribution.
 
 ## Example output shape
 
@@ -76,4 +85,8 @@ One sentence from `voice.md` that captures the underlying principle the draft mi
 
 ## Voice reminder
 Nordic restraint. The fact does the work. Three weeks in, not "a promising start."
+
+## Kilder
+- `nordkap-friluft/01-brand/voice.md` — banned word list, "evidence over enthusiasm" rule
+- `nordkap-friluft/01-brand/brand.md` — positioning context for tone judgments
 ```

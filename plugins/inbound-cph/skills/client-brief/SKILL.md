@@ -11,7 +11,17 @@ Produce a grounded one-page brief on the active client.
 
 Trigger phrases: "brief me on", "client brief", "prep for <client>", "what should I know before my call with <client>", "handover doc for <client>".
 
-## Inputs (pulled from the client's workspace)
+## Trin 0 — Kontekst (skal altid køres først)
+
+Læs `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` før noget andet. Den indeholder write-gate-reglerne, kilde-attribution-formatet, sprog-reglerne, og hvordan Drive bruges. Læs den hver gang denne skill køres — den kan ændre sig mellem versioner.
+
+For klientvendt sprog, læs også `${CLAUDE_PLUGIN_ROOT}/context/voice-house-style.md` (Inbound's egen tone, kun hvis output skal være Inbound-brandet, ikke kundens).
+
+## Trin 1 — Verificér Drive
+
+Bekræft at du kan se Inbound-rod-mappen i Drive (ID `${user_config.inbound_root_folder_id}`, default `17JwnWKToZSJUSCURjS9PzzBeqe6_gPfi`). Hvis ikke, sig: "Jeg kan ikke nå Inbound's Drive-mappe. Tjek at du er logget ind på Drive i Cowork." og stop.
+
+## Inputs (pulled from the client's workspace in Drive)
 
 - `01-brand/brand.md` — positioning, target customer, strategic context, priorities
 - `01-brand/voice.md` — editorial voice rules
@@ -45,6 +55,9 @@ Based on memory tone and meeting cadence. One or two lines. Make a judgment call
 ### 7. Voice reminder
 One sentence from `voice.md` about do/don't. Keeps any draft copy on-tone.
 
+### 8. Kilder
+List every Drive file actually read for this brief. Format per `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` § Source attribution.
+
 ## Rules
 
 - Never invent data. If memory doesn't cover something, say "not in memory" — don't hallucinate continuity.
@@ -52,6 +65,7 @@ One sentence from `voice.md` about do/don't. Keeps any draft copy on-tone.
 - Max 1 page. If it runs long, cut recommendations first.
 - Lead with conclusions. No preamble, no "here is your brief" framing.
 - Do not update `client-memory.md` from this skill — reading only.
+- Always end with `## Kilder` listing the Drive files you read. No exceptions.
 
 ## Example output shape
 
@@ -84,4 +98,14 @@ Whether the April category-page data shows any early signal. Answer: 2 weeks in,
 
 ## Voice reminder
 Understated. No hype. "Three weeks in" beats "a promising start."
+
+## Kilder
+- `nordkap-friluft/01-brand/brand.md` — positioning, Q2 priorities
+- `nordkap-friluft/01-brand/voice.md` — voice reminder
+- `nordkap-friluft/01-brand/kpis.md` — north-star, current values
+- `nordkap-friluft/04-memory/client-memory.md` — pack category trend, competitor signal (notes 2026-03 to 2026-04)
+- `nordkap-friluft/03-meetings/2026-04-12-quarterly-review.md` — re-permissioning ask
+- `nordkap-friluft/03-meetings/2026-03-22-april-plan.md` — category page flip decision
+- `nordkap-friluft/03-meetings/2026-03-08-roas-review.md` — Meta weakness flagged
+- `nordkap-friluft/06-decisions/2026-02-15-pricing-experiment.md` — pricing experiment status
 ```
