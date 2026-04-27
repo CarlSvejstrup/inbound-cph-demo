@@ -1,0 +1,15 @@
+# CLAUDE.md — <KUNDE> arbejdsmappe
+
+Aktiv kunde: <KUNDE>
+
+Denne arbejdsmappe kører under Inbound CPH-pluginets regler.
+Se `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` for de fulde regler.
+
+## Hurtige påmindelser
+
+- Alt der skrives eksternt (mail, Drive, Slack, opdateringer hos kunden) kræver din eksplicitte godkendelse.
+- Læs `01-brand/voice.md` før du skriver klientvendt copy.
+- Opdater `04-memory/client-memory.md` kun via det normale godkendelsesflow.
+- Svar på dansk som standard. Engelsk kun hvis brugeren beder om det.
+
+Hvis du er i tvivl om hvordan setup'et fungerer: åbn `guide.docx` i denne mappe.

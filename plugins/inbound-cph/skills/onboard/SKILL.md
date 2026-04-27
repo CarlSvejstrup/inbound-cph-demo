@@ -1,74 +1,103 @@
 ---
 name: onboard
-description: Onboard a new Inbound CPH user to the Kunde Specialist setup. Tours the plugin (skills, context, write-gate rule), points to the Drive workspace shape, and optionally writes a project-local CLAUDE.md for a specific client folder. Use when a new colleague says "I just installed this", "how do I get started", "onboard me", "what does this plugin do", or "set me up for <client>".
+description: Onboarder en Inbound CPH-bruger til Kunde Specialist-setup'et. Tager dem gennem en kort dansk samtale, og sætter en lokal CLAUDE.md + guide.docx op i deres arbejdsmappe. Brug når en kollega siger "jeg har lige installeret det her", "hvordan kommer jeg i gang", "onboard mig", "hvad gør pluginet", "sæt mig op for <kunde>", eller tilsvarende på engelsk.
 ---
 
 # onboard
 
-Walk a new Inbound CPH user through the Kunde Specialist setup so they can run their first client workflow within ten minutes.
+Tag en ny Inbound CPH-bruger gennem opsætningen, på dansk, så de kan køre deres første kundeworkflow inden for ti minutter.
 
-## When to use
+## Hvornår skal du bruge denne skill
 
-Trigger phrases: "onboard me", "I just installed inbound-cph", "how do I get started", "what does this plugin do", "set me up", "first time using this", "show me around".
+Triggerudtryk: "onboard mig", "jeg har lige installeret inbound-cph", "hvordan kommer jeg i gang", "hvad gør pluginet", "sæt mig op", "første gang jeg bruger det her", "vis mig rundt", "onboard me", "set me up", "how do I get started".
 
-## What to do
+## Sådan kører du onboarding
 
-Run the four steps below in order. Read aloud (in chat) what each section covers so the user sees the structure, then ask if they want to continue or skip ahead.
+Onboarding er en samtale, ikke en mur af tekst. Kør de syv trin nedenfor i rækkefølge. Vent på et "klar", "ja", "fortsæt" eller lignende efter hvert trin før du går videre. Sig kun det der står — ikke længere forklaringer.
 
-### 1. Read the operating contract
+### Trin 1 — Velkomst
 
-Read `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` and summarise the three rules that matter most:
-- Human-in-the-loop on every write
-- Reading is free, writing is gated
-- Voice rules per client (read `01-brand/voice.md` before drafting)
+Skriv: "Velkommen til Inbound CPH's Kunde Specialist setup. Jeg tager dig gennem det på fem minutter, på dansk. Sig til når du er klar."
 
-Confirm the user has read the summary before continuing.
+Vent på bekræftelse.
 
-### 2. Tour the company context
+### Trin 2 — Hvad er det her?
 
-Read `${CLAUDE_PLUGIN_ROOT}/context/about-inbound.md`, `drive-map.md`, and `voice-house-style.md`. Summarise each in two lines. Tell the user these files load automatically whenever the plugin is active, so they do not need to re-read them every session.
+Skriv:
 
-### 3. List the skills
+"Det her er et sæt værktøjer der hjælper dig med at arbejde hurtigere på dine kunder — briefs, analyser, ugentlige status, voice-tjek.
 
-List the skills in this plugin with their one-line descriptions:
-- `client-brief` — synthesise a one-page brief on a client
-- `proactivity-scan` — three ranked proactive recommendations
-- `weekly-pulse` — two-minute weekly status delta
-- `voice-check` — review a draft against client brand voice
-- `onboard` — this skill
+To regler at huske allerede nu:
+- Alt der ændrer noget hos kunden (Drive, mail, Slack) skal du godkende først.
+- Alt jeg læser er frit. Jeg henter selv det jeg skal bruge.
 
-Tell the user how to invoke them (`/inbound-cph:client-brief`, etc.).
+Klar til næste trin?"
 
-### 4. Optional — write a project-local CLAUDE.md (recommended)
+Vent på bekræftelse.
 
-Why this matters: the plugin's `CLAUDE.md` is **not** auto-loaded by Claude Code for free-form chat. It only loads when a skill runs. To make the operating contract always-on in this workspace, you write a tiny local `CLAUDE.md` at the workspace root that references the plugin's canonical contract. Claude Code then auto-loads the local pointer at every session start, which pulls in the full rules.
+### Trin 3 — Hvor arbejder du?
 
-The local file is a pointer, not a copy. When the plugin updates (new rules, new voice guidance), users run `/plugin update` and the next session reads the new canonical contract through the same pointer. One source of truth, automatically applied.
+Tjek det aktive working directory. Hvis der findes en `01-brand/`-undermappe, så er brugeren i en kundemappe, og kundens navn kan udledes fra mappenavnet (eller forældermappen).
 
-Ask: "Are you working from a specific client folder right now? If yes, I can write a short project-local CLAUDE.md that activates the plugin contract for this workspace."
+- **Hvis i en kundemappe:** skriv "Jeg kan se du står i `<kunde>`-mappen. Skal jeg sætte den op til dig? (j/n)"
+- **Hvis ikke i en kundemappe:** skriv "Hvilken kunde arbejder du på lige nu? Når du står i kundens mappe i Cowork, kan jeg sætte alt op." Vent på svar. Hvis brugeren navngiver en kunde men ikke står i mappen, sig: "Skift til kundens mappe i Cowork, og kør `/inbound-cph:onboard` igen — så finder jeg den selv."
 
-If yes, ask for the client name, draft the file content, and follow the standard write-gate (draft, render proposal, wait for explicit approval, write).
+Vent på `j`/`ja`/`yes` før du går videre til trin 4. Hvis brugeren siger nej, spring til trin 5.
 
-The project-local CLAUDE.md should be short:
+### Trin 4 — Skriv setup-filerne (auto, ingen write-gate)
 
-```
-# CLAUDE.md — <client> workspace
+**Vigtig undtagelse fra write-gate-reglen:** trin 4 skriver to filer uden at spørge om eksplicit godkendelse for hver fil. Brugeren har allerede godkendt selve setup'et med `j` i trin 3. De to filer er installation, ikke indhold — de tilhører brugerens egen arbejdsmappe og er genereret fra plugin-templates. Skriv dem direkte.
 
-Active client: <client>
-Drive path: <client folder name in Inbound Drive>
+**Fil 1 — `./CLAUDE.md`** (kunde-specifik, genereret fra template):
 
-This workspace operates under the Inbound CPH plugin operating contract.
-See ${CLAUDE_PLUGIN_ROOT}/CLAUDE.md for the full rules.
+Læs `${CLAUDE_PLUGIN_ROOT}/skills/onboard/templates/CLAUDE.md.template`, erstat `<KUNDE>` med kundens navn, og skriv resultatet til `./CLAUDE.md` i det aktive working directory.
 
-Quick reminders:
-- Every external write needs explicit user approval
-- Read 01-brand/voice.md before drafting any client-facing copy
-- Update 04-memory/client-memory.md only via the gated write pattern
-```
+**Fil 2 — `./guide.docx`** (generisk, identisk for alle setups):
 
-## Rules
+Kopier `${CLAUDE_PLUGIN_ROOT}/skills/onboard/templates/guide.docx` direkte til `./guide.docx` i det aktive working directory. Ingen ændringer, ingen rendering — ren filkopi.
 
-- Do not write anything in steps 1, 2, or 3. Those are read-only tours.
-- Step 4 writes only with explicit approval, scoped to the exact path shown.
-- Never write to `~/.claude/CLAUDE.md` (global). This skill is project-local only. If the user wants a global install, point them to copying `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` themselves.
-- Keep the tour tight. The user is onboarding, not reading a manual. Two-line summaries, not paragraphs.
+**Hvis `./guide.docx` allerede findes:** spørg "Du har allerede en `guide.docx` i mappen. Skal jeg overskrive den med den nyeste version? (j/n)" Overskriv kun ved `j`.
+
+Bekræft tilbage: "Gjort. To filer er nu i `<kunde>`-mappen:
+- `CLAUDE.md` — aktiverer reglerne for hver session du kører her
+- `guide.docx` — en kort guide du kan åbne i Word eller Pages og komme tilbage til"
+
+### Trin 5 — Værktøjerne
+
+Skriv:
+
+"Her er værktøjerne du kan bruge:
+
+- `/inbound-cph:client-brief` — en sides brief på en kunde
+- `/inbound-cph:proactivity-scan` — tre proaktive anbefalinger
+- `/inbound-cph:weekly-pulse` — ugentlig status-opdatering
+- `/inbound-cph:voice-check` — tjek om en tekst rammer kundens tone
+- `/inbound-cph:onboard` — den her samtale
+
+Du kører dem ved at skrive kommandoen i Cowork. Klar til de sidste to ting?"
+
+Vent på bekræftelse.
+
+### Trin 6 — Tre ting at huske
+
+Skriv:
+
+"Tre ting at huske:
+
+1. Jeg skriver aldrig noget ud (mail, Drive, ændringer hos kunden) uden du siger ja først.
+2. Hver kunde har sin egen tone, læs `01-brand/voice.md` før du skriver klientvendt copy.
+3. Hvis noget ser forkert ud, sig til. Jeg gætter ikke på data."
+
+### Trin 7 — Klar
+
+Skriv:
+
+"Du er klar. Prøv `/inbound-cph:client-brief` for at se det første værktøj i aktion. Og åbn `guide.docx` hvis du vil have et opslagsværk ved hånden."
+
+## Regler
+
+- Hele samtalen kører på dansk. Skift kun til engelsk hvis brugeren skriver til dig på engelsk eller eksplicit beder om det.
+- Brug ikke AI/ML-jargon. Sig "værktøj" ikke "skill" i forklaringer (slash-kommandoerne hedder selvfølgelig stadig `/inbound-cph:skill-name` fordi det er den faktiske kommando). Sig "instruks" ikke "prompt". Sig "viden om kunden" ikke "context".
+- Trin 4 er den eneste undtagelse fra plugin-CLAUDE.md's write-gate — fordi det er installation af brugerens eget setup, ikke indhold der lander hos kunden. Alle andre skills i pluginet (voice-check, client-brief, osv.) overholder write-gate som normalt.
+- Vent altid på bekræftelse mellem trin. Lad ikke brugeren drukne i tekst.
+- Hvis brugeren springer trin over ("bare gå videre"), respektér det — onboard skal være hurtig, ikke fuldstændig.
