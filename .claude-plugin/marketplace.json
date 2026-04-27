@@ -1,0 +1,11 @@
+{
+  "name": "inbound-cph-demo",
+  "owner": { "name": "Carl Svejstrup" },
+  "plugins": [
+    {
+      "name": "inbound-cph",
+      "source": ".",
+      "description": "Kunde Specialist skills for Inbound CPH client work"
+    }
+  ]
+}
