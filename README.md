@@ -1,70 +1,148 @@
 # inbound-cph-demo
 
-Operating layer for the Inbound CPH Kunde Specialist demo: skills, the human-in-the-loop write contract (`CLAUDE.md`), Cowork sync scripts, and onboarding docs. Source of truth for every skill that runs in the demo and (later) production setup, across Claude Cowork and Claude Projects.
+Claude Code plugin marketplace for Inbound CPH's Kunde Specialist setup. Ships a single plugin (`inbound-cph`) with skills, operating rules, and company context, installed once per user, updated via `/plugin update`.
 
-The companion Drive folder for the demo client is `nordkap-friluft/` — see `CLAUDE.md` for the workspace shape skills expect.
+The companion Drive folder for the demo client is `nordkap-friluft/`. See `plugins/inbound-cph/CLAUDE.md` for the workspace shape skills expect.
+
+## Install
+
+In Cowork (or any Claude Code surface):
+
+```
+/plugin marketplace add CarlSvejstrup/inbound-cph-demo
+/plugin install inbound-cph@inbound-cph-demo
+```
+
+Then run onboarding from inside a client folder:
+
+```
+/inbound-cph:onboard
+```
+
+Onboarding is a short Danish conversation. It writes a per-client `CLAUDE.md` (operating rules, active client) and a `guide.docx` (opslagsbog) into your workspace.
+
+## Skills shipped
+
+| Command | Purpose |
+|---|---|
+| `/inbound-cph:onboard` | Guided Danish setup, writes local CLAUDE.md + guide.docx |
+| `/inbound-cph:client-brief` | One-page brief: brand, voice, KPIs, last 3 meetings |
+| `/inbound-cph:proactivity-scan` | Three ranked proactive recommendations from data + memory |
+| `/inbound-cph:weekly-pulse` | Two-minute weekly status delta |
+| `/inbound-cph:voice-check` | Severity-ranked review of a draft against client voice |
 
 ## Philosophy
 
-**Skills are code.** They live in version control, get PR-reviewed, and distribute from here to every surface that uses them. This replaces ad-hoc admin-console editing with engineering discipline.
+**Hard rule: human-in-the-loop on every write.** Every skill stops at "here's the draft, confirm to apply." The operating contract is in `plugins/inbound-cph/CLAUDE.md` and is loaded automatically when a skill runs (and always-on if the user ran `onboard` in their workspace).
 
-## Structure
+**Reading is free, writing is gated.** Skills read aggressively across the client workspace without asking. The agent's value is synthesis. Approval is required only at the moment bytes leave the agent.
+
+**Skills are code.** They live in version control, get reviewed, and distribute via the plugin update flow. No ad-hoc admin-console editing.
+
+## Repo structure
 
 ```
-skills/
-  client-brief/
-    SKILL.md          # the skill definition (universal Anthropic format)
-    scripts/          # supporting Python/bash if needed
-    examples/         # example inputs and expected outputs
-  proactivity-scan/
-    ...
-  weekly-pulse/
-    ...
+.claude-plugin/
+  marketplace.json              # marketplace manifest, lists the plugin
+plugins/
+  inbound-cph/
+    .claude-plugin/
+      plugin.json               # plugin manifest (name, version, description)
+    CLAUDE.md                   # operating contract (loaded by skills)
+    context/
+      about-inbound.md          # company background
+      drive-map.md              # Drive root + folder conventions
+      voice-house-style.md      # Inbound's own house voice (not client voice)
+    skills/
+      client-brief/SKILL.md
+      proactivity-scan/SKILL.md
+      weekly-pulse/SKILL.md
+      voice-check/SKILL.md
+      onboard/
+        SKILL.md
+        templates/
+          CLAUDE.md.template    # per-client local pointer (with <KUNDE> token)
+          guide.md              # guide.docx source (markdown)
+          guide.docx            # built artifact, copied into workspaces
 scripts/
-  sync-to-cowork.sh   # pulls main + symlinks into local Cowork skills folder
+  build-guide.sh                # pandoc: guide.md → guide.docx
+clients/
+  nordkap-friluft/              # demo client outputs (not part of plugin)
 docs/
-  CONTRIBUTING.md     # how to add or modify a skill
-  PUBLISHING.md       # how skills get from here to Projects
+  cowork-project-instructions.md
 ```
 
-## How skills flow to users
+## Versioning + update flow
 
-1. **Author a skill locally** in a branch. Test it in Cowork against a real client Drive folder.
-2. **Open a PR.** CODEOWNERS review. Any skill that touches client data or external APIs needs Ian's approval.
-3. **Merge to `main`.**
-4. **Cowork users** run `sync-to-cowork.sh` (or it runs on a LaunchAgent timer) — skill updates are live immediately.
-5. **Projects users** get the update on the weekly publish cadence — Ian publishes to the org's admin console every Monday.
+The plugin uses **explicit semver** in `plugins/inbound-cph/.claude-plugin/plugin.json`. Bump it every time you ship changes, pushing commits without bumping does nothing for users (Claude Code compares version strings, not SHAs).
 
-## Requirements
+After bumping and pushing:
 
-- Git (obviously)
-- Anthropic universal SKILL.md format — works across Cowork, Claude Code, Cursor, Codex
-- Python 3.11+ for any script-backed skills
+1. Users open Cowork → marketplace panel.
+2. Click `...` next to **`inbound-cph-demo`** marketplace → Refresh.
+3. Plugin's "Update" button lights up → click.
 
-## Quickstart for a new skill author
+If the marketplace metadata is stuck, the nuke-and-reinstall path:
+
+```
+/plugin marketplace remove inbound-cph-demo
+/plugin marketplace add CarlSvejstrup/inbound-cph-demo
+/plugin install inbound-cph@inbound-cph-demo
+```
+
+## Adding or editing a skill
 
 ```bash
-cd ~/code/personal/inbound-cph-demo
-git checkout -b add-<skill-name>
-cp -r skills/_template skills/<skill-name>
-# edit skills/<skill-name>/SKILL.md
-# test in Cowork
-git add skills/<skill-name>
-git commit -m "add <skill-name> skill"
-git push -u origin add-<skill-name>
-# open PR
+# 1. Create the skill directory
+mkdir -p plugins/inbound-cph/skills/<skill-name>
+# 2. Write SKILL.md (frontmatter: name, description; body: when-to-use, inputs, what-to-produce, rules)
+# 3. Bump plugins/inbound-cph/.claude-plugin/plugin.json version
+# 4. Commit, push
+# 5. Refresh marketplace + update in Cowork to test
 ```
 
-## Current skills (v0.1)
+Skill format follows Anthropic's universal SKILL.md spec, works across Cowork, Claude Code, Cursor, Codex.
 
-| Skill | Purpose |
-|---|---|
-| `client-brief` | Synthesise brand + history + memory + last 3 meetings into a one-page client brief |
-| `proactivity-scan` | Read live data + memory, flag anomalies, draft 3 proactive recommendations |
-| `weekly-pulse` | 2-minute status: what moved, what's at risk, what the client will ask about |
+## Editing the user-facing guide
+
+The guide users see (`guide.docx`) is generated from markdown:
+
+```bash
+# Edit the source
+$EDITOR plugins/inbound-cph/skills/onboard/templates/guide.md
+# Rebuild the .docx
+./scripts/build-guide.sh
+# Bump plugin version, commit both files
+```
+
+Requires pandoc (`brew install pandoc`).
+
+## Language and tone
+
+The plugin defaults to **Danish** for all user interaction. English terms are preserved for marketing/tool vocabulary (SEO, ROAS, GA4, etc.). AI/ML jargon ("prompt", "context window", "embedding", etc.) is banned when explaining the system to users, they are marketers, not engineers. See `plugins/inbound-cph/CLAUDE.md` for the full language rules.
+
+## Client workspace shape
+
+Every client folder in the Inbound Drive follows this structure:
+
+```
+<client>/
+  01-brand/        brand.md, voice.md, kpis.md
+  02-past-reports/ historical deliverables
+  03-meetings/     YYYY-MM-DD-<topic>.md
+  04-memory/       client-memory.md  ← the moat
+  05-data/         CSVs, Semrush exports, snapshots
+  06-decisions/    YYYY-MM-DD-<topic>.md
+```
+
+If a client folder is missing one of these, surface it rather than scaffolding silently.
 
 ## Roadmap
 
-- `/capture` — lightweight append-to-memory skill for post-meeting hygiene
-- `/client-report-monthly` — graduate the existing `inbound-report` skill into this library
-- `/new-client-onboarding` — scaffolds a new client's Drive folder + Project from templates
+- `/inbound-cph:capture` — lightweight append-to-memory skill for post-meeting hygiene
+- `/inbound-cph:monthly-report` — graduate the existing `inbound-report` skill into this plugin
+- `/inbound-cph:competitive-pulse` — Semrush + Ahrefs delta on competitor keyword movement
+
+## Current version
+
+See `plugins/inbound-cph/.claude-plugin/plugin.json`. Latest changes in commit log.
