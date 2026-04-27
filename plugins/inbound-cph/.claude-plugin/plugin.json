@@ -1,6 +1,14 @@
 {
   "name": "inbound-cph",
   "description": "Kunde Specialist skills for Inbound CPH: client briefs, proactivity scans, weekly pulses, voice checks, onboarding (Danish-default)",
-  "version": "0.3.0",
-  "author": { "name": "Inbound CPH" }
+  "version": "0.3.1",
+  "author": { "name": "Inbound CPH" },
+  "userConfig": {
+    "inbound_root_folder_id": {
+      "type": "string",
+      "title": "Inbound CPH Drive folder ID",
+      "description": "The Google Drive folder ID for the inbound-cph/ root folder where all client folders live. Defaults to the shared agency folder. Override only if you have a different mount.",
+      "default": "17JwnWKToZSJUSCURjS9PzzBeqe6_gPfi"
+    }
+  }
 }

@@ -2,11 +2,19 @@
 
 The Inbound CPH Google Drive is the source of truth for all client work. Skills in this plugin assume this shape.
 
-## Root
+## How skills find Drive
 
-The agency Drive contains one folder per client at the top level. Each folder name matches the client identifier used in skill invocations (`/inbound-cph:client-brief nordkap-friluft` → folder `nordkap-friluft/`).
+This plugin does **not** bundle a Google Drive MCP. It relies on the Drive connector that Cowork provides built-in (`mcp__claude_ai_Google_Drive__*` tools). Each user authorises Drive once at the Cowork level; this plugin reuses that auth.
 
-For demo and evaluation, the canonical client is **Nordkap Friluft**, in folder `nordkap-friluft/` (root ID `1Ca6_V4v57h7NDVQS0NRI-yP47gh_QTa9`).
+The root folder ID is configured via the plugin's `userConfig.inbound_root_folder_id`. Default: `17JwnWKToZSJUSCURjS9PzzBeqe6_gPfi` (the shared `inbound-cph/` folder). Users can override at install time if they have a different mount.
+
+When a skill needs to read from Drive, it should use the Drive search/read tools and scope by parent folder ID = `${user_config.inbound_root_folder_id}`. From there, walk into `<client>/01-brand/`, `<client>/04-memory/`, etc.
+
+## Root layout
+
+The `inbound-cph/` folder contains one subfolder per client at the top level. Each subfolder name matches the client identifier used in skill invocations (`/inbound-cph:client-brief nordkap-friluft` → folder `nordkap-friluft/`).
+
+For demo and evaluation, the canonical client is **Nordkap Friluft**, in folder `nordkap-friluft/` (folder ID `1Ca6_V4v57h7NDVQS0NRI-yP47gh_QTa9`).
 
 ## Per-client folder shape
 
