@@ -1,6 +1,6 @@
 {
   "name": "inbound-cph",
-  "description": "Kunde Specialist skills for Inbound CPH: client briefs, proactivity scans, weekly pulses",
-  "version": "0.1.0",
+  "description": "Kunde Specialist skills for Inbound CPH: client briefs, proactivity scans, weekly pulses, voice checks, onboarding",
+  "version": "0.2.0",
   "author": { "name": "Inbound CPH" }
 }
