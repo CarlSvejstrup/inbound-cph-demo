@@ -1,0 +1,101 @@
+# Project status — inbound-cph-demo
+
+Single source of truth for what's shipped vs what's open. Update at the end of every substantive session.
+
+Last updated: 2026-04-27, after v0.4.0.
+
+## Milestones
+
+### M1 — Plugin marketplace bootstrap
+**Status:** Done
+
+- Repo on GitHub (public): `CarlSvejstrup/inbound-cph-demo`
+- `.claude-plugin/marketplace.json` valid
+- `plugins/inbound-cph/.claude-plugin/plugin.json` valid
+- Installable via `/plugin marketplace add CarlSvejstrup/inbound-cph-demo`
+- Versioning: explicit semver, currently v0.4.0
+
+### M2 — Core skills
+**Status:** Done (5 skills shipped)
+
+- `client-brief` — synthesised one-page brief
+- `proactivity-scan` — three ranked recommendations
+- `weekly-pulse` — two-minute status delta
+- `voice-check` — severity-ranked draft review
+- `onboard` — guided Danish setup writing local CLAUDE.md + guide.docx
+
+### M3 — Operating contract
+**Status:** Done
+
+- Plugin-root `CLAUDE.md` with: write-gate, Drive access (with default folder ID), source attribution rules, language/tone rules, workspace shape
+- Local `CLAUDE.md.template` inlines essentials so workspace free-form chat also has them
+- Three `context/*.md` files (`about-inbound`, `drive-map`, `voice-house-style`)
+
+### M4 — User docs and onboarding
+**Status:** Done
+
+- `onboard` skill (3-step Danish flow with one ja/nej)
+- `guide.docx` generated from `guide.md` via `scripts/build-guide.sh` (pandoc)
+- Workspace-agnostic — onboard treats cwd as general working hub across multiple clients
+
+### M5 — Drive integration
+**Status:** Partial
+
+- Plugin uses Cowork's built-in `mcp__claude_ai_Google_Drive__*` connector
+- `userConfig.inbound_root_folder_id` declared with default
+- Skills declare Trin 1 (verify Drive) before working
+- **Not tested end-to-end against a real client folder in Cowork.** Need to confirm the userConfig is actually prompted on install, the folder ID is read correctly by skills, and Drive search/read works as expected.
+- No fallback if Drive is unreachable beyond "stop and ask user to log in"
+
+### M6 — Source attribution
+**Status:** Done
+
+- Plugin CLAUDE.md `## Source attribution` section defines the canonical format
+- All four content skills require `## Kilder` block at end of output
+- Example outputs in each skill include sample Kilder blocks
+
+## Open work / backlog
+
+### High priority
+
+- **End-to-end test in Cowork against Nordkap folder.** Confirm: marketplace install, userConfig prompt, Drive read, source attribution appears, language defaults to Danish. Until this is done, M5 is theoretical.
+- **Decide versioning mode.** Explicit semver vs commit-SHA. Document choice in README.
+
+### Medium priority
+
+- **Clean up `docs/CONTRIBUTING.md` and `docs/PUBLISHING.md`.** Pre-plugin era, currently misleading. Either rewrite or delete; the README and this status doc cover most of what they tried to.
+- **Add a `_template/` skill** so authors copying the structure for a new skill have a starting point. Should include the standard Trin 0 / Trin 1 / Kilder boilerplate.
+- **Consider splitting marketplace.json from plugin** if more plugins ship later (e.g. inbound-internal vs inbound-client). Currently a single-plugin marketplace.
+
+### Low priority / future
+
+- `/inbound-cph:capture` — lightweight append-to-memory after meetings (mentioned in README roadmap)
+- `/inbound-cph:monthly-report` — graduate the `inbound-report` skill into this plugin
+- `/inbound-cph:competitive-pulse` — Semrush + Ahrefs delta on competitor keyword movement
+- `/inbound-cph:meeting-prep` — pre-call kit (calendar event + last 3 meeting notes + open decisions)
+- `/inbound-cph:decision-log` — capture a decision with structured frontmatter, propose write to `06-decisions/`
+
+### Out of scope (for now)
+
+- Scaffolding new client Drive folders (data hygiene problem, belongs in onboarding ops, not the agent)
+- Drive write-back beyond `client-memory.md` appends (e.g. creating new meeting notes from chat) — wait until M5 is solid
+- Multi-marketplace setup, dependencies on other plugins, MCP servers bundled in-plugin
+
+## Repo hygiene
+
+- `.gitignore` excludes `.DS_Store` and `.claude/` (local Claude Code workspace dir)
+- `clients/nordkap-friluft/output/*.pptx` — demo output, not part of plugin, stays in repo for reference
+- Pandoc required for guide.docx rebuild (`brew install pandoc`)
+- README updated 2026-04-27 to cover v0.4.0 (Drive integration, source attribution, version flow)
+
+## Versioning history
+
+| Version | Date | Highlights |
+|---|---|---|
+| 0.1.0 | 2026-04-26 | Initial plugin packaging |
+| 0.2.0 | 2026-04-27 | voice-check, onboard, context files |
+| 0.2.1 | 2026-04-27 | Doc clarification on CLAUDE.md loading |
+| 0.3.0 | 2026-04-27 | Danish default, conversational onboard, guide.docx |
+| 0.3.1 | 2026-04-27 | Collapsed onboard, userConfig for Drive folder |
+| 0.3.2 | 2026-04-27 | Workspace-agnostic onboard, ja/nej |
+| 0.4.0 | 2026-04-27 | Source attribution + reliable context loading |

@@ -31,6 +31,14 @@ Onboarding is a short Danish conversation. It writes a per-client `CLAUDE.md` (o
 | `/inbound-cph:weekly-pulse` | Two-minute weekly status delta |
 | `/inbound-cph:voice-check` | Severity-ranked review of a draft against client voice |
 
+Every content skill (everything except `onboard`) begins by loading the plugin CLAUDE.md (Trin 0) and verifying Drive access (Trin 1), then ends with a `## Kilder` section listing the Drive files used. See `plugins/inbound-cph/CLAUDE.md` for the source-attribution format.
+
+## Drive integration
+
+The plugin reads from Inbound's Google Drive via Cowork's built-in `mcp__claude_ai_Google_Drive__*` connector — no MCP server bundled. Each user authorises Drive once at the Cowork level, and the plugin reuses that auth.
+
+The Drive root folder is configured via `userConfig.inbound_root_folder_id` in `plugin.json`. Default is the shared agency `inbound-cph/` folder; users can override at install time if they have a different mount.
+
 ## Philosophy
 
 **Hard rule: human-in-the-loop on every write.** Every skill stops at "here's the draft, confirm to apply." The operating contract is in `plugins/inbound-cph/CLAUDE.md` and is loaded automatically when a skill runs (and always-on if the user ran `onboard` in their workspace).
@@ -145,4 +153,4 @@ If a client folder is missing one of these, surface it rather than scaffolding s
 
 ## Current version
 
-See `plugins/inbound-cph/.claude-plugin/plugin.json`. Latest changes in commit log.
+See `plugins/inbound-cph/.claude-plugin/plugin.json`. Latest changes in commit log. Session continuity in `docs/session-handoff.md` and `docs/project-status.md`.
