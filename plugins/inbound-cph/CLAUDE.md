@@ -36,6 +36,23 @@ For every write:
 
 Read aggressively across the client workspace without asking. The agent's value is synthesis across context the user can't hold in their head. Every skill that produces a recommendation or draft stops at "here's the draft, confirm to apply."
 
+## Memory ordering (newest-first, always)
+
+`04-memory/client-memory.md` is reverse-chronological. Newest entries live at the **top** of the file. This applies to every skill that writes to memory and every skill that reads from it — no exceptions.
+
+### Writing to memory
+
+- Every entry must start with a dated header: `## YYYY-MM-DD — <skill name or short title>`.
+- The date is today's date in ISO format (`YYYY-MM-DD`), not a free-text date.
+- New entries are **prepended** to the top of the file, immediately under the file's title/frontmatter and above all prior entries. Never append to the bottom.
+- The proposal block shown to the user before the write must include the dated header so the user is approving the dated version that will land.
+
+### Reading from memory
+
+- Read top-down. The first entry you encounter is the newest; stop reading once you have enough recent context for the task (typically the last 2-6 weeks of entries, depending on the skill).
+- When two memory entries conflict, the newer one (higher in the file) wins. Cite both in `## Kilder` if both are load-bearing for the output, but trust the newer.
+- When citing a memory entry in `## Kilder`, include its date so the user can locate it: `nordkap-friluft/04-memory/client-memory.md — entry dated 2026-04-14`.
+
 ## Drive access
 
 This plugin uses Cowork's built-in Google Drive connector (`mcp__claude_ai_Google_Drive__*`). The user has already authorised Drive at the Cowork level.

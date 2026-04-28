@@ -60,7 +60,7 @@ Do NOT rank by how easy they are to action. The point of proactivity is surfacin
 - Recommendations must be specific enough to act on. "Improve email" is not a recommendation. "Greenlight the re-permissioning campaign by Friday" is.
 - If memory contains a prior recommendation that's still open, check whether this scan's findings strengthen or weaken that recommendation. Mention it.
 - Always end output with `## Kilder` listing every Drive file you read, plus any live-connector pulls (Semrush, GA4, Ads) with the date of the pull. Format per `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` § Source attribution.
-- **Drive write-back is human-in-the-loop. Never write to `client-memory.md` without explicit user approval.** After producing the three items, render the proposed one-line memory entry (date + three headlines + confidence levels, matching existing memory format) in a fenced code block, prefixed with: *"Proposed append to `04-memory/client-memory.md` — confirm to write, edit to revise, or say skip."* Wait for explicit approval (`yes` / `approve` / `confirm` / `write it`); silence and thumbs-up are not approval. Edits are approval — apply them then write. Only after approval, perform the Drive write and confirm back to the user. The user-confirmed append is what makes the context bank compound — but a write without confirmation is worse than no write at all.
+- **Drive write-back is human-in-the-loop. Never write to `client-memory.md` without explicit user approval.** Memory is newest-first: new entries are **prepended to the top** of the file (see `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` § Memory ordering). After producing the three items, render the proposed entry — a dated header `## YYYY-MM-DD — Proactivity scan` followed by the one-line summary (three headlines + confidence levels, matching existing memory format) — in a fenced code block, prefixed with: *"Proposed entry to prepend at the top of `04-memory/client-memory.md` — confirm to write, edit to revise, or say skip."* The date is today's date in `YYYY-MM-DD`. Wait for explicit approval (`yes` / `approve` / `confirm` / `write it`); silence and thumbs-up are not approval. Edits are approval — apply them then write. Only after approval, perform the Drive write — **prepend** the entry at the top of the file, above all prior entries. Never append to the bottom. Confirm back to the user that the entry now sits at the top. The user-confirmed prepend is what makes the context bank compound — but a write without confirmation is worse than no write at all.
 
 ## Example output shape
 
@@ -89,6 +89,8 @@ Do NOT rank by how easy they are to action. The point of proactivity is surfacin
 - `nordkap-friluft/06-decisions/2026-04-01-category-page-flip.md` — measurement window opens 2026-04-22
 
 ---
-Appending to client-memory.md:
+Prepending to top of client-memory.md:
+
+## 2026-04-20 — Proactivity scan
 2026-04-20 — proactivity scan: (1) Hav & Fjeld pack pressure [H], (2) email plateau [M], (3) category page early-signal window [L]
 ```

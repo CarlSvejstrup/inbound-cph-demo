@@ -53,7 +53,7 @@ One sentence from `voice.md` that captures the underlying principle the draft mi
 - If `voice.md` is missing or sparse, say so explicitly and review against `brand.md` positioning only, do not invent voice rules.
 - Be honest about `On voice` verdicts. If a draft is fine, say it is fine. Padding the findings to look thorough is itself off-voice for an agency.
 - Lead with the verdict. No preamble.
-- This skill is read-only by default. If a recurring deviation pattern emerges (e.g. the same hype word appears in three drafts), propose a one-line append to `04-memory/client-memory.md` under "Voice deviation patterns", but follow the standard write-gate: draft, render the proposal, wait for explicit approval, then write.
+- This skill is read-only by default. If a recurring deviation pattern emerges (e.g. the same hype word appears in three drafts), propose a dated entry to **prepend** at the top of `04-memory/client-memory.md` (header: `## YYYY-MM-DD — Voice deviation pattern`), following the plugin's Memory ordering rule (newest-first) and the standard write-gate: draft, render the proposal, wait for explicit approval, then write to the top of the file. Never append to the bottom.
 - Always end output with `## Kilder` listing every Drive file you read. Format per `${CLAUDE_PLUGIN_ROOT}/CLAUDE.md` § Source attribution.
 
 ## Example output shape
